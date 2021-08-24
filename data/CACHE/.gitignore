@@ -1,0 +1,3 @@
+# Ignore everything in here, but the R files used to make the data files. 
+*
+!*.R
