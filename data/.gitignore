@@ -1,12 +1,2 @@
-# Ignore everything
-*
+# Ignore nothing
 
-# But not these files...
-!.gitignore
-!README.md
-!*.sh
-!*.zip
-!il2020.pl_COMBINED.R
-!il2020.pl_COMBINED_BLOCK_GROUP.csv
-!il2020.pl_COMBINED_COUNTY.csv
-!il2020.pl_COMBINED_TRACT.csv

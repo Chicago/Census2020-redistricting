@@ -10,9 +10,6 @@ Please see the articles below for some highlights regarding the release, and fee
 
 The PL94 release will not be available through normal API access initially.  The links for PL-171 and other sources are listed below the articles.  
 
-## Getting started
-
-Before running any analysis scripts please run `./data/unzip.sh` *from the project directory* to unzip the files in `./data`.
 
 # Redistricting Articles
 
