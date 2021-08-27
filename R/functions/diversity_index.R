@@ -2,42 +2,84 @@ diversity_index <- function(dt){
     require(magrittr)
     require(data.table)
     
-    colnames_2020 <- c("P0020001", "P0020002", "P0020005", "P0020006", "P0020007",
-                       "P0020008", "P0020009", "P0020010", "P0020011")
-    colnames_2010 <- colnames_2020 %>% gsub("^P00200", "PL0020", .)
+    ret <- dt[ , 1 - ((H/TOT)^2 + (W/TOT)^2 + (B/TOT)^2 + (AIAN/TOT)^2 + 
+                          (ASIAN/TOT)^2 + (NHPI/TOT)^2 + (SOR/TOT)^2 + 
+                          (MULTI/TOT)^2)]
+
+    return(ret)
+}
+
+
+# v1 <- fread("data/pl_2000_il_tract.csv",
+#             keepLeadingZeros = TRUE,
+#             integer64 = "character")
+# v2 <- fread("data/pl_2010_il_tract.csv",
+#             keepLeadingZeros = TRUE,
+#             integer64 = "character")
+# v3 <- fread("data/il2020.pl_COMBINED_TRACT.csv",
+#             keepLeadingZeros = TRUE,
+#             integer64 = "character")
+
+fread_census <- function(fname){
+    ret <- fread(fname,
+                 keepLeadingZeros = TRUE,
+                 integer64 = "character")
+    ret
+}
+
+di_race_var_table <- function(dt){
+    require(data.table)
+    require(magrittr)
     
-    if((colnames_2020 %in% colnames(dt)) %>% all){
-        ret <- dt[i = TRUE, 
-                  list(TOT   = P0020001, # Total pop
-                       H     = P0020002, # Hispanic or Latino
-                       W     = P0020005, # Not Hispanic or Latino: White alone
-                       B     = P0020006, # Not Hispanic or Latino:  Black or African American alone 
-                       AIAN  = P0020007, # Not Hispanic or Latino:  American Indian and Alaska Native alone
-                       ASIAN = P0020008, # Not Hispanic or Latino:  Asian alone
-                       NHPI  = P0020009, # Not Hispanic or Latino:  Native Hawaiian and Other Pacific Islander alone
-                       SOR   = P0020010, # Not Hispanic or Latino:  Some Other Race alone
-                       MULTI = P0020011 # Not Hispanic or Latino:  Population of two or more races
-                  )] %>% 
-            .[ , 1 - ((H/TOT)^2 + (W/TOT)^2 + (B/TOT)^2 + (AIAN/TOT)^2 + 
-                          (ASIAN/TOT)^2 + (NHPI/TOT)^2 + (SOR/TOT)^2 + (MULTI/TOT)^2)]
+    ref_cols <- data.table(ret = c("STATE", "COUNTY", "TRACT", "GEO_ID", "LSAD_NAME",
+                                   "TOT",   # Total pop
+                                   "H",     # Hispanic or Latino
+                                   "W",     # Not Hispanic or Latino: White alone
+                                   "B",     # Not Hispanic or Latino:  Black or African American alone 
+                                   "AIAN",  # Not Hispanic or Latino:  American Indian and Alaska Native alone
+                                   "ASIAN", # Not Hispanic or Latino:  Asian alone
+                                   "NHPI",  # Not Hispanic or Latino:  Native Hawaiian and Other Pacific Islander alone
+                                   "SOR",   # Not Hispanic or Latino:  Some Other Race alone
+                                   "MULTI"), # Not Hispanic or Latino:  Population of two or more races
+                           colnames_2020 = c("STATE", "COUNTY", "TRACT", "GEO_ID", "LSAD_NAME",
+                                             "P0020001", "P0020002", "P0020005", "P0020006", "P0020007",
+                                             "P0020008", "P0020009", "P0020010", "P0020011"))
+    ref_cols$colnames_2010 <- ref_cols$colnames_2020 %>% gsub("^P00200", "P0020", .)
+    ref_cols$colnames_2000 <- ref_cols$colnames_2020 %>% gsub("^P00200", "PL0020", .)
+    
+    # colnames_2010 <- colnames_2020 %>% gsub("^P00200", "P0020", .)
+    # colnames_2000 <- colnames_2020 %>% gsub("^P00200", "PL0020", .)
+    
+    if("GEOID" %in% colnames(dt)){
+        ## in the 2020 data the geocode corresponds to geo_id
+        dt %>% setnames(., "GEOID", "GEO_ID")
     }
-    if((colnames_2010 %in% colnames(dt)) %>% all){
-        ret <- dt[i = TRUE, 
-                  list(TOT   = PL002001, # Total pop
-                       H     = PL002002, # Hispanic or Latino
-                       W     = PL002005, # Not Hispanic or Latino: White alone
-                       B     = PL002006, # Not Hispanic or Latino:  Black or African American alone 
-                       AIAN  = PL002007, # Not Hispanic or Latino:  American Indian and Alaska Native alone
-                       ASIAN = PL002008, # Not Hispanic or Latino:  Asian alone
-                       NHPI  = PL002009, # Not Hispanic or Latino:  Native Hawaiian and Other Pacific Islander alone
-                       SOR   = PL002010, # Not Hispanic or Latino:  Some Other Race alone
-                       MULTI = PL002011 # Not Hispanic or Latino:  Population of two or more races
-                  )] %>% 
-            .[ , 1 - ((H/TOT)^2 + (W/TOT)^2 + (B/TOT)^2 + (AIAN/TOT)^2 + 
-                          (ASIAN/TOT)^2 + (NHPI/TOT)^2 + (SOR/TOT)^2 + (MULTI/TOT)^2)]
+    if(!"LSAD_NAME" %in% colnames(dt)){
+        ## in the 2020 data the LSAD_NAME is missing, maybe I forgot it dl it?
+        dt[ , LSAD_NAME:= NA]
+    }
+    
+    if((ref_cols$colnames_2000 %in% colnames(dt)) %>% all){
+        ret <- dt[,ref_cols$colnames_2000,with=F]
+        setnames(ret, ref_cols$colnames_2000, ref_cols$ret)
+        ret[ , GEO_ID := gsub("1400000US", "", GEO_ID)]
+    }
+    
+    if((ref_cols$colnames_2010 %in% colnames(dt)) %>% all){
+        ret <- dt[,ref_cols$colnames_2010,with=F]
+        setnames(ret, ref_cols$colnames_2010, ref_cols$ret)
+        ret[ , GEO_ID := gsub("1400000US", "", GEO_ID)]
+    }
+    
+    if((ref_cols$colnames_2020 %in% colnames(dt)) %>% all){
+        ret <- dt[,ref_cols$colnames_2020,with=F]
+        setnames(ret, ref_cols$colnames_2020, ref_cols$ret)
+        ret[ , GEO_ID := gsub("1400000US", "", GEO_ID)]
     }
     
     if(!exists("ret")) stop("Are the appropriate column names in the data set?")
     
     return(ret)
+    
 }
+
