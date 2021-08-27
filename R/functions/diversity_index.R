@@ -10,16 +10,6 @@ diversity_index <- function(dt){
 }
 
 
-# v1 <- fread("data/pl_2000_il_tract.csv",
-#             keepLeadingZeros = TRUE,
-#             integer64 = "character")
-# v2 <- fread("data/pl_2010_il_tract.csv",
-#             keepLeadingZeros = TRUE,
-#             integer64 = "character")
-# v3 <- fread("data/il2020.pl_COMBINED_TRACT.csv",
-#             keepLeadingZeros = TRUE,
-#             integer64 = "character")
-
 fread_census <- function(fname){
     ret <- fread(fname,
                  keepLeadingZeros = TRUE,
@@ -79,6 +69,7 @@ di_race_var_table <- function(dt){
     
     if(!exists("ret")) stop("Are the appropriate column names in the data set?")
     
+    #return
     return(ret)
     
 }
