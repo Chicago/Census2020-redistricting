@@ -30,9 +30,7 @@ library(data.table)
 library(colorspace)
 
 ## API Key for stadia
-stadia_api_key <- yaml::read_yaml("config/stadia.yaml")
-
-leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'197c5c13-03bb-409e-8806-1a49bc7deaad'}"
+leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'%s'}" %>% sprintf(., yaml::read_yaml("config/stadia.yaml"))
 leaflet_stadia_attribution <- '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 
 ## Community area map data
