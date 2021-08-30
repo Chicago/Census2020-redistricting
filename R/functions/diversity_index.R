@@ -70,7 +70,7 @@ di_race_var_table <- function(dt){
     if(!exists("ret")) stop("Are the appropriate column names in the data set?")
     
     #return
-    return(ret)
+    return(ret[])
     
 }
 

@@ -1,0 +1,205 @@
+---
+author: Gene Leynes
+date: '2021-08-30'
+title: Diversity Index by Tract
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+The diversity index for Chicago
+
+
+```{r, message=FALSE, results='hide'}
+
+## Libraries
+library(geneorama)
+library(shiny)
+library(leaflet)
+library(RColorBrewer)
+library(rgdal)
+library(rgeos)
+library(sp)
+library(data.table)
+library(colorspace)
+
+## API Key for stadia
+leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'%s'}" %>% sprintf(., yaml::read_yaml("config/stadia.yaml"))
+leaflet_stadia_attribution <- '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+
+sourceDir("R/functions/")
+```
+
+
+## Read in demographic data
+
+Read in only the fields from `data/il2020.pl_COMBINED_TRACT.csv` that are needed for calculating the diversity index, and use the function to calculate the field. 
+
+The diversity index indicates how likely you are to pick people of two different races when you pick two people from a population. It's calculated by calculating the propbability that you don't pick two people of the same race. 
+
+To calculate race in this context the variables that break out population by Hispanic / Non-Hispanic are used, and for simplicity of calculation the (relatively small) multiracial population is all treated as a single race. This simplifying assumption has little effect on the result, and makes the index much easier to compute. Plus, since it's consistently computed, it's reasonable to use as a comparison between regions.
+
+Relevant fields for Diversity Index:
+    
+ - `P0020001` - Total pop
+ - `P0020002` - Hispanic or Latino
+ - `P0020005` - Not Hispanic or Latino: White alone
+ - `P0020006` - Not Hispanic or Latino:  Black or African American alone 
+ - `P0020007` - Not Hispanic or Latino:  American Indian and Alaska Native alone
+ - `P0020008` - Not Hispanic or Latino:  Asian alone
+ - `P0020009` - Not Hispanic or Latino:  Native Hawaiian and Other Pacific Islander alone
+ - `P0020010` - Not Hispanic or Latino:  Some Other Race alone
+ - `P0020011` - Not Hispanic or Latino:  Population of two or more races
+    
+Other header fields: `GEOID`, `GEOCODE`, `STATE`, `COUNTY`, `SUMLEV`, `TRACT`, `BLKGRP`, 
+               `BLOCK`, `CSA`, `BASENAME`, `POP100`, `HU100`, 
+               `INTPTLAT`, `INTPTLON` 
+
+
+Formula for Diversity Index: `1 - ((H/TOT)^2 + (W/TOT)^2 + (B/TOT)^2 + (AIAN/TOT)^2 + 
+                          (ASIAN/TOT)^2 + (NHPI/TOT)^2 + (SOR/TOT)^2 + 
+                          (MULTI/TOT)^2)`
+
+The logic for these computations is encapsulated in the R functions in `R/functions`. 
+
+
+```{r}
+pl_2020_tract <- "data/il2020.pl_COMBINED_TRACT.csv" %>% 
+    fread_census %>%
+    di_race_var_table
+pl_2020_tract$DI <- diversity_index(pl_2020_tract)
+pl_2020_tract
+```
+
+A histogram of the index:
+
+```{r}
+hist(pl_2020_tract$DI)
+```
+
+
+
+```{r, results='hide'}
+## Import shape file
+shp_tracts_2020 <- readOGR("data/tl_2020_17031_tract20")
+
+## Clean the year specific column names (i.e. ALAND20 becomes ALAND)
+shp_tracts_2020@data %>% setnames(., gsub("[1-2]0", "", colnames(.)))
+
+
+## Some work to look for a common key
+
+## View data structure
+str(shp_tracts_2020@data)
+str(pl_2020_tract)
+
+NAsummary(shp_tracts_2020@data)
+NAsummary(pl_2020_tract)
+# data.table(shp_tracts_2020@data$GEOID %>% sort,pl_2020_tract$GEOCODE %>% sort)[,list(.N),V1==V2]
+
+## Bring in CA data and geocode tracts
+data("chi_community_areas")
+
+## Generate city outline
+chi_city_outline <- rgeos::gUnaryUnion(as(chi_community_areas, "SpatialPolygons"))
+
+
+## Geocode to CA
+shp_tracts_2020$community <- geocode_to_map(lat = shp_tracts_2020$INTPTLAT, 
+                                            lon = shp_tracts_2020$INTPTLON,
+                                            map = chi_community_areas,
+                                            "community")
+## Determine if geogrpahies are in Chicago
+shp_tracts_2020$chicago <- !is.na(shp_tracts_2020@data$community)
+
+##==============================================================================
+## COMMUNITY AREA DATA / GEOCODING
+##==============================================================================
+setnames(shp_tracts_2020@data,"GEOID", "GEO_ID")
+shp_tracts_2020@data <- merge(shp_tracts_2020@data,
+                              pl_2020_tract[, list(GEO_ID, DI)], 
+                              "GEO_ID", sort = FALSE)
+```
+
+
+```{r}
+pal <- viridisLite::viridis(256, option = "D") %>% 
+    colorNumeric(palette = ., 
+                 domain = shp_tracts_2020$DI,
+                 na.color = "black", alpha = F, reverse = TRUE)
+
+leaflet(shp_tracts_2020) %>%
+    addTiles(urlTemplate = leaflet_stadia_url,
+             attribution = leaflet_stadia_attribution) %>%
+    addPolygons(fillColor = ~pal(DI),
+                fillOpacity = 0.5, 
+                stroke=FALSE, weight = 0.5,
+                label=~paste(GEO_ID, DI)) %>%
+    addLegend(pal = pal,
+              values = ~DI,
+              title = "Diversity Index",
+              position = "bottomright")
+```
+
+
+```{r}
+
+library(viridisLite)
+
+# shp <- dat[Hard_break_event>0,
+#            list(intersectionId, intersectionName,
+#                 latitude, 
+#                 longitude, 
+#                 hard_break_event = Hard_break_event)]
+# shp[ , cols := colorNumeric("Greens", NULL, n = 4)(log(hard_break_event))]
+# shp[ , popups := paste(intersectionId, intersectionName)]
+# leaflet() %>%
+#     addProviderTiles("CartoDB.Positron") %>%
+#     addCircleMarkers(lng = ~ longitude, lat = ~ latitude, 
+#                      data = shp, popup = ~popups,
+#                      radius = 3, color = ~cols, stroke = FALSE, 
+#                      fillOpacity = 0.5) 
+#     # addLegend(pal = ctpal, values = log(preds), ## NOTE: USING LOG VALUES
+#     #           position = "bottomright", title = "Vector Index Values")
+
+viridisLite::viridis(256, option = "D") %>% 
+    colorNumeric(palette = ., 
+                 domain = "",
+                 na.color = "black", alpha = F, reverse = TRUE)
+
+palette_function <- colorNumeric(palette = "Greens", NULL, n = 4)
+palette_function <- colorNumeric(palette = "inferno", NULL, n = 4, reverse = T)
+shp <- dat[Hard_break_event>0,
+           list(intersectionId, intersectionName,
+                latitude, 
+                longitude, 
+                Hard_break_event,
+                cols = palette_function((log(Hard_break_event))),
+                popups = paste(intersectionId, intersectionName))]
+leaflet(shp) %>%
+    addProviderTiles("CartoDB.Positron") %>%
+    addCircleMarkers(lng = ~ longitude, lat = ~ latitude, popup = ~popups,
+                     radius = 4, color = ~cols, stroke = FALSE, 
+                     label = ~popups,
+                     fillOpacity = 0.25) %>% 
+    addLegend(pal = palette_function,
+              values = ~Hard_break_event %>% log,
+              position = "bottomright",
+              title = "Hard Brake Events")
+
+
+
+palette_function <- colorNumeric(palette = "inferno", NULL, n = 4, reverse = T)
+leaflet(shp) %>%
+    addProviderTiles("CartoDB.Positron") %>%
+    addCircleMarkers(lng = ~ longitude, lat = ~ latitude, popup = ~popups,
+                     radius = 8, color = ~cols, stroke = FALSE, 
+                     fillOpacity = 0.25) %>% 
+    addLegend(pal = palette_function,
+              values = ~Hard_break_event %>% log,
+              position = "bottomright",
+              title = "Hard Brake Events") %>% 
+    fitBounds(-87.5869560241699, 41.8921189164765, -87.6624870300293, 41.8665567412712)
+```
+
