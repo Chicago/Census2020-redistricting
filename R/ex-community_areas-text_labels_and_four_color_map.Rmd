@@ -1,15 +1,26 @@
 
 
-rm(list=ls())
+---
+author: Gene Leynes
+date: '2021-08-30'
+title: Example - Text labels and 4 color maps
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+This is just a quick example to demonstrate text labels and 4 color mapping using the `MapColoring` package. 
+
+The actual palette was manually chosen using the `hcl_wizard` app in the `colorspace` package (`colorspace::hcl_wizard()`).
 
 
-##------------------------------------------------------------------------------
+## Initialization 
+
+```{r, results='hide', message=FALSE}
+
 ## Libraries
-##------------------------------------------------------------------------------
-
 library(geneorama)
-
-library(shiny)
+# library(shiny)
 library(leaflet)
 library(RColorBrewer)
 library(rgdal)
@@ -18,32 +29,32 @@ library(sp)
 library(data.table)
 library(colorspace)
 
+## API Key for stadia
+stadia_api_key <- yaml::read_yaml("config/stadia.yaml")
+
 leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'197c5c13-03bb-409e-8806-1a49bc7deaad'}"
 leaflet_stadia_attribution <- '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 
-
-
-##==============================================================================
-## COMMUNITY AREA MAP DATA
-##==============================================================================
+## Community area map data
 data("chi_community_areas")
 
-##==============================================================================
-## Generate city outline
-##==============================================================================
+## Combine Community Areas to create city outline
 chi_city_outline <- rgeos::gUnaryUnion(as(chi_community_areas, "SpatialPolygons"))
 
-##==============================================================================
-## SIMPLE PLOT OF COMMUNITY AREAS AND SUBSET
-##==============================================================================
+```
 
-## Use HCL Wizard to manually pick colors:
-# colorspace::hcl_wizard()
+
+## Community Areas shown in 4 colors with text labels
+
+The text labels are far from perfect, but it's an example. Labels are created with `addLabelOnlyMarkers`.
+
+```{r}
 
 ## Get colors for each ward using 4 color algorithm
 pal <- colorspace::qualitative_hcl(n = 4, h = c(26, -264), c = 70, l = 70)
 chi_community_areas$colors <- pal[MapColoring::getColoring(chi_community_areas)]
 
+## Plot
 leaflet(chi_community_areas) %>%
     addTiles(urlTemplate = leaflet_stadia_url, 
              attribution = leaflet_stadia_attribution) %>% 
@@ -57,6 +68,15 @@ leaflet(chi_community_areas) %>%
                                                     offset = c(0, 0), opacity = 1, 
                                                     textsize = "10px", textOnly = TRUE, 
                                                     style = list("font-style" = "bold")))
+
+```
+
+
+## Subset of Community Areas
+
+This example is just to show some CA's that are contiguous, which can be nice as an example because it speeds up the rendering.
+
+```{r}
 
 samp_ca_num <- c(8,24,28,31,32,33,34,35,59,60)
 ca_samp_ii <- match(samp_ca_num, chi_community_areas$area_numbe)
@@ -75,3 +95,4 @@ leaflet(chi_community_areas[chi_community_areas$area_numbe %in% samp_ca_num, ]) 
                                                     offset = c(0, 0), opacity = 1, 
                                                     textsize = "10px", textOnly = TRUE, 
                                                     style = list("font-style" = "bold")))
+```
