@@ -24,10 +24,10 @@ outfile_block_group <- "data/il2020.pl_COMBINED_BLOCK_GROUP.csv"
 ##------------------------------------------------------------------------------
 ## INPUT DATA
 ##------------------------------------------------------------------------------
-pl_all <- pl_all <- fread(infile, 
-                          keepLeadingZeros = TRUE, 
-                          integer64 = "character",
-                          nrows = -10)
+pl_all <- fread(infile, 
+                keepLeadingZeros = TRUE, 
+                integer64 = "character",
+                nrows = -10)
 
 ##------------------------------------------------------------------------------
 ## SAVE (SUB GEOGRAPHIES)

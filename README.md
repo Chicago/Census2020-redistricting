@@ -23,7 +23,7 @@ https://www.census.gov/library/stories/2021/08/2020-united-states-population-mor
 
 https://www.census.gov/library/stories/2021/08/improved-race-ethnicity-measures-reveal-united-states-population-much-more-multiracial.html
 
-Details and the equation to calculate the Census Bureau's Diversity Index can be found in this project here: `.\\data\\RAW\\DOCUMENTATION\\Diversity Index Equation.pdf` (this was obtained by request, it's not online from the Bureau directly, yet.)
+Details and the equation to calculate the Census Bureau's Diversity Index can be found in this project here: `data/RAW/DOCUMENTATION/Diversity Index Equation.pdf` (this was obtained by request, it's not online from the Bureau directly, yet.)
 
 
 # Data Release and Documentation
@@ -50,14 +50,14 @@ https://www2.census.gov/programs-surveys/decennial/2020/data/01-Redistricting_Fi
 Descriptions of variables and their groups: <br>
 https://www2.census.gov/programs-surveys/decennial/2020/technical-documentation/complete-tech-docs/summary-file/2020Census_PL94_171Redistricting_StatesTechDoc_English.pdf
 
-The raw has been copied here: `.\\data\\RAW\\PL94-171-2020-ILLINOIS\\il2020.pl.zip`.  
+The raw has been copied here: `data/RAW/PL94-171-2020-ILLINOIS/il2020.pl.zip`.  
 
 The scripts to process the raw population are here: 
 
- - `data\\CACHE\\il2020.pl_COMBINE.R` - unzip a local copy
- - `data\\CACHE\\il2020.pl_COMBINED_FILTER.R` - Create useful subsets
+ - `data/CACHE/il2020.pl_COMBINE.R` - unzip a local copy
+ - `data/CACHE/il2020.pl_COMBINED_FILTER.R` - Create useful subsets
 
-Useful subsets for PL-94-171 for the vintages 2020, 2010, and 2000 have been saved in `.\\data`.  This directory also contains a data dictionary and variable documentation. 
+Useful subsets for PL-94-171 for the vintages 2020, 2010, and 2000 have been saved in `./data`.  This directory also contains a data dictionary and variable documentation. 
 
 
 ## Map files (2020 PL-94-171)
@@ -81,7 +81,7 @@ Use the 2020 Tab of the linked page. Select Block Relationship Files.<br>
 https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html
 
 State tract map copied here:<br>
-`data\\tl_2020_17_tract` - tract boundaries
+`data/tl_2020_17_tract` - tract boundaries
 
 
 ## Map files (2010 and 2000)
@@ -93,7 +93,7 @@ https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_17_tract10.zip<br
 https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2000/tl_2010_17013_tract00.zip<br>
 https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_17013_tract10.zip<br>
 
-files copied to `data\\RAW\\MAPS`, unzipped to `data`
+files copied to `data/RAW/MAPS`, unzipped to `data`
 
 
 ## TIGERweb Map Data Files
@@ -114,25 +114,25 @@ This link is a TIGER Map data download selector. The drop down menu allows acces
 Several county level maps and geographic data files can be found at this link, but they are also copied into this repository for incorporation with the project.<br>
 https://www2.census.gov/geo/tiger/TIGER2020PL/STATE/17_ILLINOIS/17031/
 
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_addr.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_addrfn.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_arealm.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_areawater.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_bg10.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_bg20.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_cousub10.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_cousub20.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_edges.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_faces.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_facesah.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_facesal.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_featnames.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_linearwater.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_pointlm.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_roads.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_tabblock10.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_tabblock20.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_tract10.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_tract20.zip`
- - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_vtd20.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_addr.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_addrfn.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_arealm.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_areawater.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_bg10.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_bg20.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_cousub10.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_cousub20.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_edges.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_faces.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_facesah.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_facesal.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_featnames.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_linearwater.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_pointlm.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_roads.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_tabblock10.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_tabblock20.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_tract10.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_tract20.zip`
+ - `data/RAW/MAPS/TL_2020_17031_COOK/tl_2020_17031_vtd20.zip`
 
