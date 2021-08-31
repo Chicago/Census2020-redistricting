@@ -25,9 +25,11 @@ library(data.table)
 library(colorspace)
 library(magrittr)
 
+
+## Note: stadia is not rendering online, so the key isn't necessary. 
 ## API Key for stadia
-leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'%s'}" %>% sprintf(., yaml::read_yaml("config/stadia.yaml"))
-leaflet_stadia_attribution <- '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+# leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'%s'}" %>% sprintf(., yaml::read_yaml("config/stadia.yaml"))
+# leaflet_stadia_attribution <- '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 
 sourceDir("R/functions/")
 ```
@@ -129,8 +131,9 @@ pal <- viridisLite::viridis(256, option = "D") %>%
                  na.color = "black", alpha = F, reverse = TRUE)
 
 leaflet(shp_tracts_2020) %>%
-    addTiles(urlTemplate = leaflet_stadia_url,
-             attribution = leaflet_stadia_attribution) %>%
+    addProviderTiles("CartoDB.DarkMatter") %>%
+    # addTiles(urlTemplate = leaflet_stadia_url,
+    #          attribution = leaflet_stadia_attribution) %>%
     addPolygons(fillColor = ~pal(DI),
                 fillOpacity = 0.5, 
                 stroke=FALSE, weight = 0.5,
