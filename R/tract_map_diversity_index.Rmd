@@ -11,7 +11,7 @@ editor_options:
 The diversity index for Chicago
 
 
-```{r, message=FALSE, results='hide'}
+```{r, message=FALSE, results='hide', echo=FALSE}
 
 ## Libraries
 library(geneorama)
@@ -23,6 +23,7 @@ library(rgeos)
 library(sp)
 library(data.table)
 library(colorspace)
+library(magrittr)
 
 ## API Key for stadia
 leaflet_stadia_url <- "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?apikey={'%s'}" %>% sprintf(., yaml::read_yaml("config/stadia.yaml"))
@@ -57,9 +58,7 @@ Other header fields: `GEOID`, `GEOCODE`, `STATE`, `COUNTY`, `SUMLEV`, `TRACT`, `
                `INTPTLAT`, `INTPTLON` 
 
 
-Formula for Diversity Index: `1 - ((H/TOT)^2 + (W/TOT)^2 + (B/TOT)^2 + (AIAN/TOT)^2 + 
-                          (ASIAN/TOT)^2 + (NHPI/TOT)^2 + (SOR/TOT)^2 + 
-                          (MULTI/TOT)^2)`
+Formula for Diversity Index: `1 - ((H/TOT)^2 + (W/TOT)^2 + (B/TOT)^2 + (AIAN/TOT)^2 + (ASIAN/TOT)^2 + (NHPI/TOT)^2 + (SOR/TOT)^2 + (MULTI/TOT)^2)`
 
 The logic for these computations is encapsulated in the R functions in `R/functions`. 
 
@@ -74,13 +73,13 @@ pl_2020_tract
 
 A histogram of the index:
 
-```{r}
+```{r, echo=FALSE}
 hist(pl_2020_tract$DI)
 ```
 
 
 
-```{r, results='hide'}
+```{r, results='hide', echo=FALSE}
 ## Import shape file
 shp_tracts_2020 <- readOGR("data/tl_2020_17031_tract20")
 
@@ -123,7 +122,7 @@ shp_tracts_2020@data <- merge(shp_tracts_2020@data,
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 pal <- viridisLite::viridis(256, option = "D") %>% 
     colorNumeric(palette = ., 
                  domain = shp_tracts_2020$DI,
@@ -143,16 +142,18 @@ leaflet(shp_tracts_2020) %>%
 ```
 
 
-```{r}
+```{r, echo=FALSE, results='hide'}
 
-library(viridisLite)
+# Examples of maps
 
-# shp <- dat[Hard_break_event>0,
+# library(viridisLite)
+
+# shp <- dat[val_example>0,
 #            list(intersectionId, intersectionName,
 #                 latitude, 
 #                 longitude, 
-#                 hard_break_event = Hard_break_event)]
-# shp[ , cols := colorNumeric("Greens", NULL, n = 4)(log(hard_break_event))]
+#                 val_example = val_example)]
+# shp[ , cols := colorNumeric("Greens", NULL, n = 4)(log(val_example))]
 # shp[ , popups := paste(intersectionId, intersectionName)]
 # leaflet() %>%
 #     addProviderTiles("CartoDB.Positron") %>%
@@ -163,43 +164,47 @@ library(viridisLite)
 #     # addLegend(pal = ctpal, values = log(preds), ## NOTE: USING LOG VALUES
 #     #           position = "bottomright", title = "Vector Index Values")
 
-viridisLite::viridis(256, option = "D") %>% 
-    colorNumeric(palette = ., 
-                 domain = "",
-                 na.color = "black", alpha = F, reverse = TRUE)
-
-palette_function <- colorNumeric(palette = "Greens", NULL, n = 4)
-palette_function <- colorNumeric(palette = "inferno", NULL, n = 4, reverse = T)
-shp <- dat[Hard_break_event>0,
-           list(intersectionId, intersectionName,
-                latitude, 
-                longitude, 
-                Hard_break_event,
-                cols = palette_function((log(Hard_break_event))),
-                popups = paste(intersectionId, intersectionName))]
-leaflet(shp) %>%
-    addProviderTiles("CartoDB.Positron") %>%
-    addCircleMarkers(lng = ~ longitude, lat = ~ latitude, popup = ~popups,
-                     radius = 4, color = ~cols, stroke = FALSE, 
-                     label = ~popups,
-                     fillOpacity = 0.25) %>% 
-    addLegend(pal = palette_function,
-              values = ~Hard_break_event %>% log,
-              position = "bottomright",
-              title = "Hard Brake Events")
 
 
 
-palette_function <- colorNumeric(palette = "inferno", NULL, n = 4, reverse = T)
-leaflet(shp) %>%
-    addProviderTiles("CartoDB.Positron") %>%
-    addCircleMarkers(lng = ~ longitude, lat = ~ latitude, popup = ~popups,
-                     radius = 8, color = ~cols, stroke = FALSE, 
-                     fillOpacity = 0.25) %>% 
-    addLegend(pal = palette_function,
-              values = ~Hard_break_event %>% log,
-              position = "bottomright",
-              title = "Hard Brake Events") %>% 
-    fitBounds(-87.5869560241699, 41.8921189164765, -87.6624870300293, 41.8665567412712)
+# 
+# viridisLite::viridis(256, option = "D") %>% 
+#     colorNumeric(palette = ., 
+#                  domain = "",
+#                  na.color = "black", alpha = F, reverse = TRUE)
+# 
+# palette_function <- colorNumeric(palette = "Greens", NULL, n = 4)
+# palette_function <- colorNumeric(palette = "inferno", NULL, n = 4, reverse = T)
+# shp <- dat[val_example>0,
+#            list(intersectionId, intersectionName,
+#                 latitude, 
+#                 longitude, 
+#                 val_example,
+#                 cols = palette_function((log(val_example))),
+#                 popups = paste(intersectionId, intersectionName))]
+# leaflet(shp) %>%
+#     addProviderTiles("CartoDB.Positron") %>%
+#     addCircleMarkers(lng = ~ longitude, lat = ~ latitude, popup = ~popups,
+#                      radius = 4, color = ~cols, stroke = FALSE, 
+#                      label = ~popups,
+#                      fillOpacity = 0.25) %>% 
+#     addLegend(pal = palette_function,
+#               values = ~val_example %>% log,
+#               position = "bottomright",
+#               title = "Hard Brake Events")
+# 
+# 
+# 
+# palette_function <- colorNumeric(palette = "inferno", NULL, n = 4, reverse = T)
+# leaflet(shp) %>%
+#     addProviderTiles("CartoDB.Positron") %>%
+#     addCircleMarkers(lng = ~ longitude, lat = ~ latitude, popup = ~popups,
+#                      radius = 8, color = ~cols, stroke = FALSE, 
+#                      fillOpacity = 0.25) %>% 
+#     addLegend(pal = palette_function,
+#               values = ~val_example %>% log,
+#               position = "bottomright",
+#               title = "Hard Brake Events") %>% 
+#     fitBounds(-87.5869560241699, 41.8921189164765, -87.6624870300293, 41.8665567412712)
 ```
 
