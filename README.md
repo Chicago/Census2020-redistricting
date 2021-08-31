@@ -106,12 +106,12 @@ https://www2.census.gov/geo/tiger/TIGER2020PL/LAYER/COUNTY/2020/tl_2020_17_count
 `data/tl_2020_17_county20.zip` - county boundaries
 
 
-TIGER Map data download selector for many states, years, geographies, and data types: https://www.census.gov/cgi-bin/geo/shapefiles/index.php<br>
+This link is a TIGER Map data download selector. The drop down menu allows access by year, geography, and data types: https://www.census.gov/cgi-bin/geo/shapefiles/index.php<br>
 
 
 ### County level map data for 2020 for 17031 (COOK COUNTY)
 
-Several maps and geographic data files<br>
+Several county level maps and geographic data files can be found at this link, but they are also copied into this repository for incorporation with the project.<br>
 https://www2.census.gov/geo/tiger/TIGER2020PL/STATE/17_ILLINOIS/17031/
 
  - `data\\RAW\\MAPS\\TL_2020_17031_COOK\\tl_2020_17031_addr.zip`

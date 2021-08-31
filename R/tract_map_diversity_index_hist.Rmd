@@ -224,7 +224,7 @@ leaflet(shp_tracts_2000) %>%
 ```
 
 
-```{r, eval=FALSE, results='hide'}
+```{r, eval=FALSE, results='hide',echo=FALSE}
 
 ## Chicago's ratio of height to width
 # bbox(chi_city_outline)["y",] %>% diff %>% unname/
