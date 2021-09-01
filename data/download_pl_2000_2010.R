@@ -78,6 +78,22 @@ pl_2000_us_county
 ## DOWNLOAD 10 REDISTRICTING DATA
 ##------------------------------------------------------------------------------
 
+## Note: this table tells us that we need to specify a county when making block
+## a wildcard
+# pl10_vars_geos <- listCensusMetadata(name = "2010/dec/pl", type = "geography") %>% 
+#     as.data.table
+# pl10_vars_geos[grep("block", name, ignore.case = T)]
+
+pl_2010_cook_block <- getCensus(name = "dec/pl",
+                              vintage = 2010,
+                              vars = pop_fields_2010,
+                              regionin="state:17+county:031",
+                              region = "block:*") %>% 
+    as.data.table
+pl_2010_il_tract[,sum(P001001)] %>% format(., big.mark=",")
+pl_2010_il_tract
+
+
 pl_2010_il_tract <- getCensus(name = "dec/pl",
                               vintage = 2010,
                               vars = pop_fields_2010,
@@ -105,9 +121,7 @@ fwrite(pl_2000_il_tract, "data/pl_2000_il_tract.csv")
 fwrite(pl_2000_us_county, "data/pl_2000_us_county.csv")
 fwrite(pl_2010_il_tract, "data/pl_2010_il_tract.csv")
 fwrite(pl_2010_us_county, "data/pl_2010_us_county.csv")
-
-
-
+fwrite(pl_2010_cook_block, "data/pl_2010_cook_block.csv.gz", compress = "gzip")
 
 
 
