@@ -87,7 +87,6 @@ State tract map copied here:<br>
 ## Map files (2010 and 2000)
 
 Historical maps for 2000 and 2010:<br>
-https://www2.census.gov/geo/tiger/tiger2k/il/tgr17031.zip<br> (not a regular map folder)
 https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2000/tl_2010_17_tract00.zip<br>
 https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_17_tract10.zip<br>
 https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2000/tl_2010_17013_tract00.zip<br>
@@ -95,21 +94,14 @@ https://www2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_17013_tract10.zip
 
 files copied to `data/RAW/MAPS`, unzipped to `data`
 
-
 ## TIGERweb Map Data Files
 
-Page with top level map data including maps for roads, parks, correctional facilities, colleges, military facilities, cities, etc. <br>
-https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_nation_based_files.html
+This link can access pages with map data for roads, parks, correctional facilities, colleges, military facilities, cities, etc. https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_nation_based_files.html
 
-TIGER Illinois 2020 County Map<br>
-https://www2.census.gov/geo/tiger/TIGER2020PL/LAYER/COUNTY/2020/tl_2020_17_county20.zip<br>
-`data/tl_2020_17_county20.zip` - county boundaries
+TIGER Map data download selector. The drop down menu allows access by year, geography, and data types: https://www.census.gov/cgi-bin/geo/shapefiles/index.php<br>
 
 
-This link is a TIGER Map data download selector. The drop down menu allows access by year, geography, and data types: https://www.census.gov/cgi-bin/geo/shapefiles/index.php<br>
-
-
-### County level map data for 2020 for 17031 (COOK COUNTY)
+### TIGER extract for 2020 for 17031 (COOK COUNTY)
 
 Several county level maps and geographic data files can be found at this link, but they are also copied into this repository for incorporation with the project.<br>
 https://www2.census.gov/geo/tiger/TIGER2020PL/STATE/17_ILLINOIS/17031/
