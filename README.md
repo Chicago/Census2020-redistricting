@@ -100,6 +100,9 @@ This link can access pages with map data for roads, parks, correctional faciliti
 
 TIGER Map data download selector. The drop down menu allows access by year, geography, and data types: https://www.census.gov/cgi-bin/geo/shapefiles/index.php<br>
 
+Navigable folder to find shapefiles: 
+https://www2.census.gov/geo/tiger/TIGER2020PL/LAYER/COUNTY/2020/ (this example is county level files for 2020 PL)
+
 
 ### TIGER extract for 2020 for 17031 (COOK COUNTY)
 
