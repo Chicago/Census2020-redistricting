@@ -11,6 +11,7 @@
 library(data.table)
 library(magrittr)
 
+
 ##------------------------------------------------------------------------------
 ## Define input / output locations
 ##------------------------------------------------------------------------------
@@ -20,7 +21,8 @@ infile <- "data/CACHE/il2020.pl_COMBINED.csv"
 outfile_tract <- "data/il2020.pl_COMBINED_TRACT.csv"
 outfile_county <- "data/il2020.pl_COMBINED_COUNTY.csv"
 outfile_block_group <- "data/il2020.pl_COMBINED_BLOCK_GROUP.csv"
-
+outfile_block <- "data/il2020.pl_COMBINED_BLOCK.csv"
+outfile_block_gz <- outfile_block %>% paste0(., ".gz")
 ##------------------------------------------------------------------------------
 ## INPUT DATA
 ##------------------------------------------------------------------------------
@@ -42,7 +44,13 @@ pl_all[SUMLEV=="050"] %>% str
 fwrite(pl_all[SUMLEV=="050"], outfile_county)
 
 pl_all[SUMLEV=="150"] %>% str
-fwrite(pl_all[SUMLEV=="150"], outfile_block_group )
+fwrite(pl_all[SUMLEV=="150"], outfile_block_group)
+
+pl_all[SUMLEV=="750"] %>% str
+# pl_all[SUMLEV=="750"] %>% genorama::NAsummary
+fwrite(pl_all[SUMLEV=="750"], outfile_block_gz, compress = "gzip")
+fread_census(outfile_block_gz)
+
 
 # pl_all[SUMLEV=="750"] %>% str
 # pl_all[SUMLEV=="750"][COUNTY == "031"] %>% str()
