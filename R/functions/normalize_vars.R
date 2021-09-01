@@ -1,5 +1,4 @@
 normalize_vars <- function(df, vars, ref){
-    class(pl_2000_tract)
     
     ## Convert input to data.frame, but 
     ## convert output to data.table on exit 
