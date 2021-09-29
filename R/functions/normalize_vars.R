@@ -13,5 +13,5 @@ normalize_vars <- function(df, vars, ref){
         ret[,v] <- df[,v] / df[,ref]
     }
     
-    return(ret)
+    return(ret[])
 }
