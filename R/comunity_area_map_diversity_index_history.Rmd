@@ -11,6 +11,9 @@ editor_options:
 
 ```{r, message=FALSE, echo=FALSE, results='hide'}
 
+## This file was  based on `tract_map_diversity_index_BLOCK.Rmd`
+## This file was  based on `tract_map_diversity_index_hist.Rmd`
+
 ## Libraries
 library(geneorama)
 library(shiny)
@@ -286,84 +289,5 @@ leaflet(chi_community_areas) %>%
               title = "Diversity Index 2020",
               position = "bottomright")
 ```
-
-
-```{r, eval=FALSE, results='hide',echo=FALSE}
-
-## Chicago's ratio of height to width
-# bbox(chi_city_outline)["y",] %>% diff %>% unname/
-#     bbox(chi_city_outline)["x",] %>% diff %>% unname
-# About .91
-
-
-
-r <- shp2raster(shp_tracts_2020, column="tot_dens",
-                ncells=1000)
-plot(r)
-
-r00 <- shp2raster(shp_tracts_2000, column="tot_dens",
-                ncells=1000)
-plot(r)
-plot(r00)
-plot(r-r00)
-
-
-# summary(shp_tracts_2000)
-# 
-# r00 <- raster(shp_tracts_2000)
-# summary(r00)
-
-str(shp_tracts_2020@data)
-
-
-# r <- rasterize(shp_tracts_2020, 
-#                raster(ncol=700, nrow=700),
-#                ext=extent(shp_tracts_2020),
-#                "tot_pct")
-# shp_tracts_2020$ALAND20 %>% sort %>% head
-# shp_tracts_2020$tot_dens %>% sort %>% tail
-# shp_tracts_2020@data[which(shp_tracts_2020$ALAND20==0),]
-# which(shp_tracts_2020$tot_dens==max(shp_tracts_2020$tot_dens, na.rm=T)) %>% shp_tracts_2020@data[.,]
-# 
-# library(raster)
-# x <- shapefile('file.shp')
-# crs(x)
-# plot(area(shp_tracts_2020) %>% pmin(., 1e8) , shp_tracts_2020$ALAND20)
-# hist(area(shp_tracts_2020) %>% .[.<3e7] )
-# area(shp_tracts_2020) %>% sort %>% head
-# 
-# plot(r)
-# 
-# 
-# 
-# r <- raster(ncol=700, nrow=700)
-# extent(r) <- extent(shp_tracts_2020)
-# shp_tracts_2020$temp <- shp_tracts_2020$TOT / as.numeric(shp_tracts_2020$ALAND20)
-# rp <- rasterize(shp_tracts_2020, r, 'temp')
-# plot(rp)
-# 
-
-# # ??raster
-# ??bkde2D
-# kde <- bkde2D(dat[ , list(longitude, latitude)],
-#               bandwidth=c(.0045, .0068), gridsize = c(100,100))
-# # Create Raster from Kernel Density output
-# KernelDensityRaster <- raster(list(x=kde$x1 ,y=kde$x2 ,z = kde$fhat))
-# 
-# #create pal function for coloring the raster
-# palRaster <- colorNumeric("Spectral", domain = KernelDensityRaster@data@values)
-# 
-# ## Leaflet map with raster
-# leaflet() %>% addTiles() %>% 
-#     addRasterImage(KernelDensityRaster, 
-#                    colors = palRaster, 
-#                    opacity = .8) %>%
-#     addLegend(pal = palRaster, 
-#               values = KernelDensityRaster@data@values, 
-#               title = "Kernel Density of Points")
-
-```
-
-
 
 
