@@ -25,7 +25,7 @@ https://www.census.gov/library/stories/2021/08/improved-race-ethnicity-measures-
 
 Details and the equation to calculate the Census Bureau's Diversity Index can be found in this project here: `data/RAW/DOCUMENTATION/Diversity Index Equation.pdf` (this was obtained by request, it's not online from the Bureau directly, yet.)
 
-![Chicago Diversity Index](./Diversity Index 2020.png)
+![Chicago Diversity Index](Diversity%20Index%202020.png)
 
 # Data Release and Documentation
 
